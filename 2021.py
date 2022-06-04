@@ -11,6 +11,7 @@ import pandas as pd
 import numpy as np
 from statistics import mode
 import copy
+import re
 # %% zadanie 1
 day_one = get_data(session=S, day=1, year=2021)
 
@@ -57,7 +58,7 @@ for M in day_two.split('\n'):
         position["depth"] += int(temp[1])
     if temp[0] == "up":
         position["depth"] -= int(temp[1])
-print(position["horizontal position"]*position["depth"])
+print("horizontal*depth:",position["horizontal position"]*position["depth"])
 
 # Slownik rozszerzony o aim
 position = {"horizontal position": 0,
@@ -74,7 +75,7 @@ for M in day_two.split('\n'):
         position["aim"] += int(temp[1])
     if temp[0] == "up":
         position["aim"] -= int(temp[1])
-print(position["horizontal position"]*position["depth"])
+print("horizontal*depth (with aim):",position["horizontal position"]*position["depth"])
 
 # %% zadanie 3
 day_three = get_data(session=S, day=3, year=2021)
@@ -225,20 +226,22 @@ game(drawn_numbers, long_tab, nested_tab, "lost")
 # %% zadanie 5
 day_five = get_data(session=S, day=5, year=2021)
 
+# rozbicie na kolejne wiersze
+sep = [row for row in re.split("\n",day_five)]
+
+# rozbicie kolejnych wierszy na wspolrzedne
+cord = [re.split(',| -> ',sep[i]) for i in range(0,len(sep))]
+
+# pusta macierz
+matrix = [[0]*1000]*1000
+
+for row in cord:
+    for el in row:
+        ind = matrix.index(row)
+        matrix[ind][int(el)-1] += 1
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+[[1,2,3],[4,5,6]][0]
 
 
 
