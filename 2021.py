@@ -320,3 +320,69 @@ def diagonal_path(matrix: list, cords: list):
 # diagonal_path(matrix_tst, cord_tst)
 
 print("Number of at least two lines overlap:",np.count_nonzero(diagonal_path(matrix, cord) > 1))
+
+# %% zadanie 6
+day_six = get_data(session=S, day=6, year=2021)
+
+lanternfishes = np.array([int(_) for _ in day_six.split(',')])
+
+tst = np.array([int(_) for _ in '3,4,3,1,2'.split(',')])
+
+def born(fish: list):
+    f = np.array(fish.copy())
+    zeros = [i for i,x in enumerate(f) if x==0]
+    if zeros != []:
+        for _ in zeros:
+            f[_] = 7
+            f = np.append(f, 9)
+        return f - 1
+    else:
+        return f - 1
+
+def simulator(fishes: list, days: int):
+    temp = born(fishes)
+    for i in range(days-1):
+        temp = born(temp)
+    return len(temp)
+
+# simulator(tst, 18)
+# simulator(tst, 80)
+# simulator(tst, 256)
+
+print("The number of lanternfish after 80 days:",simulator(lanternfishes,80))
+
+def fish_number(start: list, days: int):
+    fishes = [0]*9
+    for _ in start:
+        fishes[_] += 1
+    for _ in range(days):
+        
+    return fishes, sum(fishes)
+
+fish_number(tst, 1)
+
+tab[5] = tab[0]
+tab[8] = tab[0]
+
+print(tab[(3%5)])
+
+
+len(tab)
+
+i = 3
+while i < 9 + 3:
+    temp = 
+    print(tab[(i % 9)], end = " ")
+    i += 1
+
+tab[(3 % 9)]
+
+b = [None]*2*len(tab)
+i = 0
+while i < len(tab):
+        
+
+
+
+
+
