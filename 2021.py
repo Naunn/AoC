@@ -373,10 +373,10 @@ def evolution(tab: list):
     
     return temp+temp2
 
-evolution([1, 1, 2, 1, 0, 0, 0, 0, 0])
-evolution([1, 2, 1, 0, 0, 0, 1, 0, 1])
-evolution([2, 1, 0, 0, 0, 1, 1, 1, 1])
-evolution([1, 0, 0, 0, 1, 1, 3, 1, 2])
+# evolution([1, 1, 2, 1, 0, 0, 0, 0, 0])
+# evolution([1, 2, 1, 0, 0, 0, 1, 0, 1])
+# evolution([2, 1, 0, 0, 0, 1, 1, 1, 1])
+# evolution([1, 0, 0, 0, 1, 1, 3, 1, 2])
 
 def fish_number(start: list, days: int):
     # utworzenie inicjalnej tablicy
@@ -399,3 +399,73 @@ print("The number of lanternfish after 80 days:",fish_number(lanternfishes,80)[1
 print("The number of lanternfish after 80 days:",fish_number(lanternfishes,256)[1])
 
 # %% zadanie 7
+day_seven = get_data(session=S, day=7, year=2021)
+
+positions = np.array([int(_) for _ in day_seven.split(',')]) # "a list comprehension"
+
+tst = [16,1,2,0,4,2,7,1,2,14]
+
+def cheapest(pos: list):
+    least = sum(pos)
+    position = -1
+    for pivot in pos:
+        temp = 0
+        for _ in pos:
+            temp += ((pivot-_)**2)**(1/2)
+        if temp <= least:
+            least = temp
+            position = pivot
+    return least, position
+
+# cheapest(tst)
+
+formation = cheapest(positions)
+print("The lowest possible fuel consumption is {} on position {}.".format(formation[0],formation[1]))
+
+def series(number):
+    temp = 0
+    for _ in range(int(number)+1):
+        temp += _
+    return temp
+
+def cheapest_series(pos: list):
+    least = sum(pos)*sum(pos)
+    position = -1
+    
+    for i in range(len(pos)):
+        temp = 0
+        
+        for _ in pos:
+            temp += series(((i-_)**2)**(1/2))
+            
+        if temp <= least:
+            least = temp
+            position = i
+    
+    return least, position
+
+# cheapest_series(tst)
+
+formation = cheapest_series(positions)
+
+print("The lowest possible fuel consumption is {} on position {}.".format(formation[0],formation[1]))
+
+# %% zadanie 8
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
