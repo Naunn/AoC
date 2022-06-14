@@ -429,7 +429,7 @@ def series(number):
     return temp
 
 def cheapest_series(pos: list):
-    least = sum(pos)*sum(pos)
+    least = sum(pos)*max(pos)
     position = -1
     
     for i in range(len(pos)):
@@ -451,6 +451,50 @@ formation = cheapest_series(positions)
 print("The lowest possible fuel consumption is {} on position {}.".format(formation[0],formation[1]))
 
 # %% zadanie 8
+day_eight = get_data(session=S, day=8, year=2021)
+
+digit_legend = {'0': ['a','b','c','e','f','g'],
+                '1': ['c','f'],
+                '2': ['a','c','d','e','g'],
+                '3': ['a','c','d','f','g'],
+                '4': ['b','c','d','f'],
+                '5': ['a','b','d','f','g'],
+                '6': ['a','b','d','e','f','g'],
+                '7': ['a','c','f'],
+                '8': ['a','b','c','d','e','f','g'],
+                '9': ['a','b','c','d','f','g']}
+
+easy_digits = [_.split(' | ')[1].split(' ') for _ in day_eight.split('\n')]
+
+flat_easy_digits = [x for xs in easy_digits for x in xs]
+# This is equivalent to:
+# flat_list = []
+# for xs in xss:
+#     for x in xs:
+#         flat_list.append(x)
+
+def easy_count(signal: list):
+    one = 0
+    four = 0
+    seven = 0
+    eight = 0
+    for _ in signal:
+        if len(_) == 2:
+            one += 1
+        if len(_) == 4:
+            four += 1
+        if len(_) == 3:
+            seven += 1
+        if len(_) == 7:
+            eight += 1
+            
+    return one+four+seven+eight
+
+easy_count(flat_easy_digits)
+
+
+
+
 
 
 
