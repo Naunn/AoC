@@ -1,4 +1,4 @@
-2# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Created on Mon May 30 09:44:20 2022
 
@@ -6,7 +6,10 @@ Created on Mon May 30 09:44:20 2022
 """
 # %% import
 from aocd import get_data
-S = "53616c7465645f5f14044fb9e9c8529fb52cd27efaee89e40ccc4a65b109fd6eef45152740499f22ab9faf1e9d33d299f44dabccb491f0da6643251321077c66"
+#Prywatny
+# S = "53616c7465645f5f14044fb9e9c8529fb52cd27efaee89e40ccc4a65b109fd6eef45152740499f22ab9faf1e9d33d299f44dabccb491f0da6643251321077c66"
+#Sluzbowy
+S = "53616c7465645f5fa3040137e8796b744f160c23166de45eded969b5f96733aa58d285abafac23502d030551882234ccaeeff4aaacf80fb20a6cae4036684707"
 import pandas as pd
 import numpy as np
 from statistics import mode
@@ -577,15 +580,175 @@ def map_dict(coded: list, coded_values: list):
         decoded_dict = create_dict(coded, i) # create decoded dictionary
         t = []
         
+        # Searching through decoded dictionary
         for _ in coded_values[i]:
             for numb, key in decoded_dict.items():
                 if key == set(_):
+                    # Appending founded number to list
                     t.append(numb)
+        # Converting list into whole number by cocnatenation and summing
         final += convert(t)
         
     return final
 
 print("After adding all decoded values, we get: {}.".format(map_dict(decode_digits,easy_digits)))
+
+# %% zadanie 9
+day_nine = get_data(session=S, day=9, year=2021)
+
+heightmap = np.array(([list(x) for x in day_nine.split('\n')]))
+
+
+def checker(input_map: list, i: int, j: int, rows: int, cols: int):   
+    
+    check = int(input_map[i][j])
+    
+    if i != rows and i != 0 and j != 0 and j != cols:
+        test = []
+        test.append(int(input_map[i-1][j]))
+        test.append(int(input_map[i+1][j]))
+        test.append(int(input_map[i][j-1]))
+        test.append(int(input_map[i][j+1]))
+
+        if check < min(test):
+            return check
+       
+    # CORNERS
+    # left up corner
+    if i == j == 0:
+        test = []
+        test.append(int(input_map[i][j+1]))
+        test.append(int(input_map[i+1][j]))
+        print("left up corner")
+        if check < min(test):
+            return check
+            
+    # right down corner
+    if i == j == rows == cols:
+        test = []
+        test.append(int(input_map[i][j-1]))
+        test.append(int(input_map[i-1][j]))
+        
+        if check < min(test):
+            return check
+            
+    # right up corner
+    if i == 0 and j == cols:
+        test = []
+        test.append(int(input_map[i][j-1]))
+        test.append(int(input_map[i+1][j]))
+        print("right up corner")
+        if check < min(test):
+            return check
+ 
+    # left down corner
+    if i == 0 and j == cols:
+        test = []
+        test.append(int(input_map[i][j+1]))
+        test.append(int(input_map[i-1][j]))
+        
+        if check < min(test):
+            return check
+         
+    # EDGES
+    # up edge
+    if i == 0:
+        test = []
+        test.append(int(input_map[i+1][j]))
+        test.append(int(input_map[i][j-1]))
+        test.append(int(input_map[i][j+1]))
+
+        if check < min(test):
+            return check
+        
+    # down edge
+    if i == rows:
+        test = []
+        test.append(int(input_map[i-1][j]))
+        test.append(int(input_map[i][j-1]))
+        test.append(int(input_map[i][j+1]))
+
+        if check < min(test):
+            return check
+
+    # left edge
+    if j == 0:
+        test = []
+        test.append(int(input_map[i-1][j]))
+        test.append(int(input_map[i+1][j]))
+        test.append(int(input_map[i][j+1]))
+
+        if check < min(test):
+            return check
+      
+    # right edge
+    if j == cols:
+        test = []
+        test.append(int(input_map[i-1][j]))
+        test.append(int(input_map[i+1][j]))
+        test.append(int(input_map[i][j-1]))
+
+        if check < min(test):
+            return check
+
+    return -1
+
+def searcher(input_map: list):
+    rows = np.shape(input_map)[0]
+    cols = np.shape(input_map)[1]
+    temp = []
+    
+    for i in range(0,rows):
+        for j in range(0,cols):
+            result = checker(input_map, i, j, rows, cols)
+            if result > -1:
+                temp.append(result)
+        
+    return temp
+           
+sum(np.array(searcher(heightmap)))
+
+len(np.array(searcher(heightmap)))
+
+tst = np.array([[2,1,9,9,9,4,3,2,1,0],
+                [3,9,8,7,8,9,4,9,2,1],
+                [9,8,5,6,7,8,9,8,9,2],
+                [8,7,6,7,8,9,6,7,8,9],
+                [9,8,9,9,9,6,5,6,7,8]])
+
+tst[0][1]
+
+searcher(tst)
+
+tst[1][0]
+
+checker(heightmap, 34, 97, 100, 100)
+heightmap[34][97]
+
+[x for x in range(0,10)]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
