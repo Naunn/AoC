@@ -612,6 +612,8 @@ def checker(input_map: list, i: int, j: int, rows: int, cols: int):
 
         if check < min(test):
             return check
+        else:
+            return -1
        
     # CORNERS
     # left up corner
@@ -619,9 +621,11 @@ def checker(input_map: list, i: int, j: int, rows: int, cols: int):
         test = []
         test.append(int(input_map[i][j+1]))
         test.append(int(input_map[i+1][j]))
-        print("left up corner")
+        
         if check < min(test):
             return check
+        else:
+            return -1
             
     # right down corner
     if i == j == rows == cols:
@@ -631,28 +635,34 @@ def checker(input_map: list, i: int, j: int, rows: int, cols: int):
         
         if check < min(test):
             return check
+        else:
+            return -1
             
     # right up corner
     if i == 0 and j == cols:
         test = []
         test.append(int(input_map[i][j-1]))
         test.append(int(input_map[i+1][j]))
-        print("right up corner")
+        
         if check < min(test):
             return check
+        else:
+            return -1
  
     # left down corner
-    if i == 0 and j == cols:
+    if j == 0 and i == rows:
         test = []
         test.append(int(input_map[i][j+1]))
         test.append(int(input_map[i-1][j]))
         
         if check < min(test):
             return check
+        else:
+            return -1
          
     # EDGES
     # up edge
-    if i == 0:
+    if i == 0 and j != 0 and j != cols:
         test = []
         test.append(int(input_map[i+1][j]))
         test.append(int(input_map[i][j-1]))
@@ -660,9 +670,11 @@ def checker(input_map: list, i: int, j: int, rows: int, cols: int):
 
         if check < min(test):
             return check
+        else:
+            return -1
         
     # down edge
-    if i == rows:
+    if i == rows and j != 0 and j != cols:
         test = []
         test.append(int(input_map[i-1][j]))
         test.append(int(input_map[i][j-1]))
@@ -670,9 +682,11 @@ def checker(input_map: list, i: int, j: int, rows: int, cols: int):
 
         if check < min(test):
             return check
+        else:
+            return -1
 
     # left edge
-    if j == 0:
+    if j == 0 and i !=0 and i != rows:
         test = []
         test.append(int(input_map[i-1][j]))
         test.append(int(input_map[i+1][j]))
@@ -680,9 +694,11 @@ def checker(input_map: list, i: int, j: int, rows: int, cols: int):
 
         if check < min(test):
             return check
+        else:
+            return -1
       
     # right edge
-    if j == cols:
+    if j == cols and i !=0 and i != rows:
         test = []
         test.append(int(input_map[i-1][j]))
         test.append(int(input_map[i+1][j]))
@@ -690,60 +706,92 @@ def checker(input_map: list, i: int, j: int, rows: int, cols: int):
 
         if check < min(test):
             return check
-
+        else:
+            return -1
+    
     return -1
 
-def searcher(input_map: list):
-    rows = np.shape(input_map)[0]
-    cols = np.shape(input_map)[1]
+def finder(input_map: list):
+    rows = np.shape(input_map)[0]-1
+    cols = np.shape(input_map)[1]-1
     temp = []
     
-    for i in range(0,rows):
-        for j in range(0,cols):
+    # iterating through matrix, using checker(), add values bigger then -1 to temp list
+    for i in range(0,rows+1):
+        for j in range(0,cols+1):
             result = checker(input_map, i, j, rows, cols)
             if result > -1:
                 temp.append(result)
         
     return temp
            
-sum(np.array(searcher(heightmap)))
-
-len(np.array(searcher(heightmap)))
-
 tst = np.array([[2,1,9,9,9,4,3,2,1,0],
                 [3,9,8,7,8,9,4,9,2,1],
                 [9,8,5,6,7,8,9,8,9,2],
                 [8,7,6,7,8,9,6,7,8,9],
                 [9,8,9,9,9,6,5,6,7,8]])
 
-tst[0][1]
+# finder(tst)
 
-searcher(tst)
+# sum(np.array(finder(tst)))+len(np.array(finder(tst)))
 
-tst[1][0]
+print("The sum of the risk levels of all low points on heightmap equals:",
+      sum(np.array(finder(heightmap)))+len(np.array(finder(heightmap))))
 
-checker(heightmap, 34, 97, 100, 100)
-heightmap[34][97]
-
-[x for x in range(0,10)]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def lowest_points(input_map: list):
+    rows = np.shape(input_map)[0]-1
+    cols = np.shape(input_map)[1]-1
+    points_ij = []
+    
+    for i in range(0,rows+1):
+        for j in range(0,cols+1):
+            result = checker(input_map, i, j, rows, cols)
+            if result > -1:
+                points_ij.append([i,j])
+    return points_ij
+           
+# points_list = lowest_points(heightmap)
+points_list = lowest_points(tst)
+# points_list[0]
 
 
 
+def searcher(input_map: list, points: list):
+    i,j = points[0],points[1]
+    check = int(input_map[i][j])
+    
+    if 9 > int(input_map[i-1][j]) > check:
+        print(int(input_map[i-1][j]))
+        while (i-1 >= 0):
+            return searcher(input_map, [i-1,j])
+    elif 9 > int(input_map[i+1][j]) > check:
+        print(int(input_map[i+1][j]))
+        while (i+1 <= np.shape(input_map)[0]-1):
+            return searcher(input_map, [i+1,j])
+    elif 9 > int(input_map[i][j-1]) > check:
+        print(int(input_map[i][j-1]))
+        while (j-1 >= 0):
+            return searcher(input_map, [i,j-1])
+    elif 9 > int(input_map[i][j+1]) > check:
+        print(int(input_map[i][j+1]))
+        while (j+1 <= np.shape(input_map)[1]-1):
+            return searcher(input_map, [i,j+1])
+    return check
 
+searcher(tst, points_list[2])
+
+
+
+def up(input_map: list, points: list):
+    i,j = points[0],points[1]
+    check = int(input_map[i][j])
+    
+    if i-1 >= 0 and 9 > int(input_map[i-1][j]) > check:
+        return up(input_map, [i-1,j])
+    else:
+        return check, i, j
+
+up(tst, [4,8])
 
 
 
