@@ -598,206 +598,285 @@ day_nine = get_data(session=S, day=9, year=2021)
 
 heightmap = np.array(([list(x) for x in day_nine.split('\n')]))
 
+_map = []
+for _input in heightmap:
+    _map.append(list(map(int, _input)))
 
-def checker(input_map: list, i: int, j: int, rows: int, cols: int):   
+# def checker(input_map: list, i: int, j: int, rows: int, cols: int):   
     
-    check = int(input_map[i][j])
+#     check = int(input_map[i][j])
     
-    if i != rows and i != 0 and j != 0 and j != cols:
-        test = []
-        test.append(int(input_map[i-1][j]))
-        test.append(int(input_map[i+1][j]))
-        test.append(int(input_map[i][j-1]))
-        test.append(int(input_map[i][j+1]))
+#     if i != rows and i != 0 and j != 0 and j != cols:
+#         test = []
+#         test.append(int(input_map[i-1][j]))
+#         test.append(int(input_map[i+1][j]))
+#         test.append(int(input_map[i][j-1]))
+#         test.append(int(input_map[i][j+1]))
 
-        if check < min(test):
-            return check
-        else:
-            return -1
+#         if check < min(test):
+#             return check
+#         else:
+#             return -1
        
-    # CORNERS
-    # left up corner
-    if i == j == 0:
-        test = []
-        test.append(int(input_map[i][j+1]))
-        test.append(int(input_map[i+1][j]))
+#     # CORNERS
+#     # left up corner
+#     if i == j == 0:
+#         test = []
+#         test.append(int(input_map[i][j+1]))
+#         test.append(int(input_map[i+1][j]))
         
-        if check < min(test):
-            return check
-        else:
-            return -1
+#         if check < min(test):
+#             return check
+#         else:
+#             return -1
             
-    # right down corner
-    if i == j == rows == cols:
-        test = []
-        test.append(int(input_map[i][j-1]))
-        test.append(int(input_map[i-1][j]))
+#     # right down corner
+#     if i == j == rows == cols:
+#         test = []
+#         test.append(int(input_map[i][j-1]))
+#         test.append(int(input_map[i-1][j]))
         
-        if check < min(test):
-            return check
-        else:
-            return -1
+#         if check < min(test):
+#             return check
+#         else:
+#             return -1
             
-    # right up corner
-    if i == 0 and j == cols:
-        test = []
-        test.append(int(input_map[i][j-1]))
-        test.append(int(input_map[i+1][j]))
+#     # right up corner
+#     if i == 0 and j == cols:
+#         test = []
+#         test.append(int(input_map[i][j-1]))
+#         test.append(int(input_map[i+1][j]))
         
-        if check < min(test):
-            return check
-        else:
-            return -1
+#         if check < min(test):
+#             return check
+#         else:
+#             return -1
  
-    # left down corner
-    if j == 0 and i == rows:
-        test = []
-        test.append(int(input_map[i][j+1]))
-        test.append(int(input_map[i-1][j]))
+#     # left down corner
+#     if j == 0 and i == rows:
+#         test = []
+#         test.append(int(input_map[i][j+1]))
+#         test.append(int(input_map[i-1][j]))
         
-        if check < min(test):
-            return check
-        else:
-            return -1
+#         if check < min(test):
+#             return check
+#         else:
+#             return -1
          
-    # EDGES
-    # up edge
-    if i == 0 and j != 0 and j != cols:
-        test = []
-        test.append(int(input_map[i+1][j]))
-        test.append(int(input_map[i][j-1]))
-        test.append(int(input_map[i][j+1]))
+#     # EDGES
+#     # up edge
+#     if i == 0 and j != 0 and j != cols:
+#         test = []
+#         test.append(int(input_map[i+1][j]))
+#         test.append(int(input_map[i][j-1]))
+#         test.append(int(input_map[i][j+1]))
 
-        if check < min(test):
-            return check
-        else:
-            return -1
+#         if check < min(test):
+#             return check
+#         else:
+#             return -1
         
-    # down edge
-    if i == rows and j != 0 and j != cols:
-        test = []
-        test.append(int(input_map[i-1][j]))
-        test.append(int(input_map[i][j-1]))
-        test.append(int(input_map[i][j+1]))
+#     # down edge
+#     if i == rows and j != 0 and j != cols:
+#         test = []
+#         test.append(int(input_map[i-1][j]))
+#         test.append(int(input_map[i][j-1]))
+#         test.append(int(input_map[i][j+1]))
 
-        if check < min(test):
-            return check
-        else:
-            return -1
+#         if check < min(test):
+#             return check
+#         else:
+#             return -1
 
-    # left edge
-    if j == 0 and i !=0 and i != rows:
-        test = []
-        test.append(int(input_map[i-1][j]))
-        test.append(int(input_map[i+1][j]))
-        test.append(int(input_map[i][j+1]))
+#     # left edge
+#     if j == 0 and i !=0 and i != rows:
+#         test = []
+#         test.append(int(input_map[i-1][j]))
+#         test.append(int(input_map[i+1][j]))
+#         test.append(int(input_map[i][j+1]))
 
-        if check < min(test):
-            return check
-        else:
-            return -1
+#         if check < min(test):
+#             return check
+#         else:
+#             return -1
       
-    # right edge
-    if j == cols and i !=0 and i != rows:
-        test = []
-        test.append(int(input_map[i-1][j]))
-        test.append(int(input_map[i+1][j]))
-        test.append(int(input_map[i][j-1]))
+#     # right edge
+#     if j == cols and i !=0 and i != rows:
+#         test = []
+#         test.append(int(input_map[i-1][j]))
+#         test.append(int(input_map[i+1][j]))
+#         test.append(int(input_map[i][j-1]))
 
-        if check < min(test):
-            return check
-        else:
-            return -1
+#         if check < min(test):
+#             return check
+#         else:
+#             return -1
     
-    return -1
+#     return -1
 
-def finder(input_map: list):
-    rows = np.shape(input_map)[0]-1
-    cols = np.shape(input_map)[1]-1
-    temp = []
+# def finder(input_map: list):
+#     rows = np.shape(input_map)[0]-1
+#     cols = np.shape(input_map)[1]-1
+#     temp = []
     
-    # iterating through matrix, using checker(), add values bigger then -1 to temp list
-    for i in range(0,rows+1):
-        for j in range(0,cols+1):
-            result = checker(input_map, i, j, rows, cols)
-            if result > -1:
-                temp.append(result)
+#     # iterating through matrix, using checker() and adding values bigger then -1 to temp list
+#     for i in range(0,rows+1):
+#         for j in range(0,cols+1):
+#             result = checker(input_map, i, j, rows, cols)
+#             if result > -1:
+#                 temp.append(result)
         
-    return temp
+#     return temp
            
-tst = np.array([[2,1,9,9,9,4,3,2,1,0],
-                [3,9,8,7,8,9,4,9,2,1],
-                [9,8,5,6,7,8,9,8,9,2],
-                [8,7,6,7,8,9,6,7,8,9],
-                [9,8,9,9,9,6,5,6,7,8]])
+# tst = np.array([[2,1,9,9,9,4,3,2,1,0],
+#                 [3,9,8,7,8,9,4,9,2,1],
+#                 [9,8,5,6,7,8,9,8,9,2],
+#                 [8,7,6,7,8,9,6,7,8,9],
+#                 [9,8,9,9,9,6,5,6,7,8]])
+
 
 # finder(tst)
 
 # sum(np.array(finder(tst)))+len(np.array(finder(tst)))
 
-print("The sum of the risk levels of all low points on heightmap equals:",
-      sum(np.array(finder(heightmap)))+len(np.array(finder(heightmap))))
+# print("The sum of the risk levels of all low points on heightmap equals:",
+#       sum(np.array(finder(heightmap)))+len(np.array(finder(heightmap))))
 
-def lowest_points(input_map: list):
-    rows = np.shape(input_map)[0]-1
-    cols = np.shape(input_map)[1]-1
-    points_ij = []
+# Much shorter version
+inputs = [
+    '2199943210',
+    '3987894921',
+    '9856789892',
+    '8767896789',
+    '9899965678']
     
-    for i in range(0,rows+1):
-        for j in range(0,cols+1):
-            result = checker(input_map, i, j, rows, cols)
-            if result > -1:
-                points_ij.append([i,j])
-    return points_ij
+tst = []
+for _input in inputs:
+    tst.append(list(map(int, _input)))
+
+def neighbuors(input_map: list, i, j):
+    nghb = []
+    
+    # check to not cross bottom edge and append lower neighbour
+    if i+1 < len(input_map):
+        nghb.append(input_map[i+1][j])
+    # check to not cross upper edge and append upper neighbour
+    if i-1 >= 0:
+        nghb.append(input_map[i-1][j])
+    # check to not cross right edge and append right neighbour
+    if j+1 < len(input_map[i]):
+        nghb.append(input_map[i][j+1])
+    # check to not cross left edge and append left neighbour
+    if j-1 >= 0:
+        nghb.append(input_map[i][j-1])
+        
+    return nghb
+        
+neighbuors(tst, 1, 1)
+
+def lowest(input_map: list):
+    result = 0
+    
+    # go through all points
+    for i in range(len(input_map)):
+        for j in range(len(input_map[i])):
+            
+            # check that the current point is the smallest of its neighbours
+            if input_map[i][j] < min(neighbuors(input_map, i, j)):
+                result += 1 + input_map[i][j]
+                
+    return result
+
+lowest(tst)
+
+print("The sum of the risk levels of all low points on heightmap equals:", lowest(_map))
+
+# def lowest_points(input_map: list):
+#     rows = np.shape(input_map)[0]-1
+#     cols = np.shape(input_map)[1]-1
+#     points_ij = []
+    
+#     for i in range(0,rows+1):
+#         for j in range(0,cols+1):
+#             result = checker(input_map, i, j, rows, cols)
+#             if result > -1:
+#                 points_ij.append([i,j])
+#     return points_ij
            
-# points_list = lowest_points(heightmap)
-points_list = lowest_points(tst)
-# points_list[0]
+# # points_list = lowest_points(heightmap)
+# points_list = lowest_points(tst)
+# # points_list[0]
 
+# # Moze pseudo DFS (idziemy wglab i po natrafieniu na 9 cofamy)?
+# def pseudoDFS(input_map: list, points: list, direction: None):
+#     temp_input = input_map.copy()
+#     i,j = points[0],points[1]
+#     check = int(temp_input[i][j])
 
-
-def searcher(input_map: list, points: list):
-    i,j = points[0],points[1]
-    check = int(input_map[i][j])
+#     print(check, [i,j], "here")
+#     temp_input[i][j] = -1
+#     print(temp_input)
     
-    if 9 > int(input_map[i-1][j]) > check:
-        print(int(input_map[i-1][j]))
-        while (i-1 >= 0):
-            return searcher(input_map, [i-1,j])
-    elif 9 > int(input_map[i+1][j]) > check:
-        print(int(input_map[i+1][j]))
-        while (i+1 <= np.shape(input_map)[0]-1):
-            return searcher(input_map, [i+1,j])
-    elif 9 > int(input_map[i][j-1]) > check:
-        print(int(input_map[i][j-1]))
-        while (j-1 >= 0):
-            return searcher(input_map, [i,j-1])
-    elif 9 > int(input_map[i][j+1]) > check:
-        print(int(input_map[i][j+1]))
-        while (j+1 <= np.shape(input_map)[1]-1):
-            return searcher(input_map, [i,j+1])
-    return check
-
-searcher(tst, points_list[2])
-
-
-
-def up(input_map: list, points: list):
-    i,j = points[0],points[1]
-    check = int(input_map[i][j])
+#     if i-1 >= 0 and 9 > int(temp_input[i-1][j]) >= 0:
+#         print(input_map[i-1][j], [i-1,j], "up")
+#         while (i-1 >= 0):
+#             return pseudoDFS(temp_input, [i-1,j], "up")
+#     elif i-2 >= 0 and 9 > int(temp_input[i-2][j]) >= 0 and 9 != int(temp_input[i-1][j]):
+#         print(input_map[i-2][j], [i-2,j], "two up")
+#         while (i-2 >= 0):
+#             return pseudoDFS(temp_input, [i-2,j], "two up")
     
-    if i-1 >= 0 and 9 > int(input_map[i-1][j]) > check:
-        return up(input_map, [i-1,j])
-    else:
-        return check, i, j
+#     if j-1 >= 0 and 9 > int(temp_input[i][j-1]) >= 0:
+#         print(input_map[i][j-1], [i,j-1], "left")
+#         while (j-1 >= 0):
+#             return pseudoDFS(temp_input, [i,j-1], "left")    
+#     elif j-2 >= 0 and 9 > int(temp_input[i][j-2]) >= 0 and 9 != int(temp_input[i][j-1]):
+#         print(input_map[i][j-2], [i,j-2], "two left")
+#         while (j-2 >= 0):
+#             return pseudoDFS(temp_input, [i,j-2], "two left")      
+        
+#     if j+1 <= np.shape(input_map)[1]-1 and 9 > int(temp_input[i][j+1]) >= 0:
+#         print(input_map[i][j+1], [i,j+1], "right")
+#         while (j+1 <= np.shape(input_map)[1]-1):
+#             return pseudoDFS(temp_input, [i,j+1], "right") 
+#     elif j+2 <= np.shape(input_map)[1]-1 and 9 > int(temp_input[i][j+2]) >= 0 and 9 != int(temp_input[i][j+1]):
+#         print(input_map[i][j+2], [i,j+2], "two right")
+#         while (j+2 <= np.shape(input_map)[1]-1):
+#             return pseudoDFS(temp_input, [i,j+2], "two right")
+    
+#     if i+1 <= np.shape(input_map)[0]-1 and 9 > int(temp_input[i+1][j]) >= 0:
+#         print(input_map[i+1][j], [i+1,j], "down")
+#         while (i+1 <= np.shape(input_map)[0]-1):
+#             return pseudoDFS(temp_input, [i+1,j], "down")
+#     if i+2 <= np.shape(input_map)[0]-1 and 9 > int(temp_input[i+2][j]) >= 0 and 9 != int(temp_input[i+1][j]):
+#         print(input_map[i+2][j], [i+2,j], "two down")
+#         while (i+2 <= np.shape(input_map)[0]-1):
+#             return pseudoDFS(temp_input, [i+2,j], "two down")
+        
+#     if direction == "up":
+#         return pseudoDFS(temp_input, [i+1,j], "reverse")
+#     if direction == "two up":
+#         return pseudoDFS(temp_input, [i+2,j], "reverse")
+    
+#     if direction == "down":
+#         return pseudoDFS(temp_input, [i-1,j], "reverse")
+#     if direction == "two down":
+#         return pseudoDFS(temp_input, [i-2,j], "reverse")
+        
+#     if direction == "left":
+#         return pseudoDFS(temp_input, [i,j+1], "reverse")  
+#     if direction == "two left":
+#         return pseudoDFS(temp_input, [i,j+2], "reverse")  
+    
+#     if direction == "right":
+#         return pseudoDFS(temp_input, [i,j-1], "reverse")
+#     if direction == "two right":
+#         return pseudoDFS(temp_input, [i,j-2], "reverse")
+    
+#     return temp_input
 
-up(tst, [4,8])
+# print(tst)
+# pseudoDFS(tst, points_list[2], None)
+# pseudoDFS(tst, points_list[3], None)
 
-
-
-
-
-
-
-
-
+# Much shorter version
