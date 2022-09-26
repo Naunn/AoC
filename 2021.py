@@ -879,4 +879,42 @@ print("The sum of the risk levels of all low points on heightmap equals:", lowes
 # pseudoDFS(tst, points_list[2], None)
 # pseudoDFS(tst, points_list[3], None)
 
-# Much shorter version
+# Much shorter version - We will be grouping by counting the number neighbours that are not 9 or
+# over the edge for example [2,1,3,4] suggest that we have 4 groups with 2,1,3,4 members respectively
+groups = []
+def count_gr(temp: list, i, j):
+    # break the loop if index is over the edge or on point equal 9 or already visited, i.e. equal to -1
+    if i < 0 or i >= len(temp) or j <0 or j >= len(temp[i]) or temp[i][j] == 9 or temp[i][j] == -1:
+        return
+    
+    # mark current point as visited
+    temp[i][j] = -1
+    # add mark (+1) to the last point from group
+    groups[len(groups)-1] += 1
+    # check same above condition for ALL neighbours to count if there is more of none nines
+    count_gr(temp, i+1, j)
+    count_gr(temp, i-1, j)
+    count_gr(temp, i, j+1)
+    count_gr(temp, i, j-1)
+
+temp = copy.deepcopy(tst)
+# go through all points in matrix
+for i in range(len(temp)):
+    for j in range(len(temp[i])):
+        groups.append(0)
+        count_gr(temp, i, j)
+
+temp
+# multiple three largest groups members like dot product
+np.prod(sorted([x for x in groups if x != 0], reverse=True)[:3])
+
+groups = []
+temp = copy.deepcopy(_map)
+for i in range(len(temp)):
+    for j in range(len(temp[i])):
+        groups.append(0)
+        count_gr(temp, i, j)
+        
+print("The sum of the risk levels of all low points on heightmap equals:",
+      np.prod(sorted([x for x in groups if x != 0], reverse=True)[:3]))
+
