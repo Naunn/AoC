@@ -7,9 +7,9 @@ Created on Mon May 30 09:44:20 2022
 # %% import
 from aocd import get_data
 #Prywatny
-# S = "53616c7465645f5f14044fb9e9c8529fb52cd27efaee89e40ccc4a65b109fd6eef45152740499f22ab9faf1e9d33d299f44dabccb491f0da6643251321077c66"
+S = "53616c7465645f5fdf7a79d2869dc3fd8b6c0d014b4090d6eb88ddfcd11cb489d924af1b46d034ded8aac3e8fc992c6301dc38862fc0ddeb52e782efad13c7b1"
 #Sluzbowy
-S = "53616c7465645f5fa3040137e8796b744f160c23166de45eded969b5f96733aa58d285abafac23502d030551882234ccaeeff4aaacf80fb20a6cae4036684707"
+# S = "53616c7465645f5fa3040137e8796b744f160c23166de45eded969b5f96733aa58d285abafac23502d030551882234ccaeeff4aaacf80fb20a6cae4036684707"
 import pandas as pd
 import numpy as np
 from statistics import mode
@@ -917,4 +917,98 @@ for i in range(len(temp)):
         
 print("The sum of the risk levels of all low points on heightmap equals:",
       np.prod(sorted([x for x in groups if x != 0], reverse=True)[:3]))
+
+# %% zadanie 10
+day_ten = get_data(session=S, day=10, year=2021)
+
+syntax_ = day_ten.split('\n')
+
+# {([(<{}[<>[]}>{[]{[(<()> drop {}, <>, [], [], ()
+# {([(<[}>{{[(<> drop <>
+# {([(<[}>{{[( found [}
+
+# [[<[([]))<([[{}[[()]]] drop [], {}, ()
+# [[<[())<([[[[]]] drop (), []
+# [[<[)<([[[]] drop []
+# [[<[)<([[] drop []
+# [[<[)<([ found [)
+
+# [{[{(]}([{[{{}([] drop {}, {}, {}
+# [{[{(]}([{[{{}([] drop {}, []
+# [{[{(]}([{[{( found (]
+
+# [<(<(<(<{}))><([]([]() drop {}, [], [], ()
+# [<(<(<(<))><(( found <)
+                  
+# <{([([[(<>()){}]>(<<{{ drop <>, (), {}
+# <{([([[()]>(<<{{ drop ()
+# <{([([[]>(<<{{ drop []
+# <{([([>(<<{{ found [>
+
+# Utowrzyc 3 tablice:
+# pairs = ['()','[]','{}','<>']
+# left_wing = ['(','[','{','<']
+# right_wing =  [')',']','}','>']
+
+# Przechodzac po kolejnych parach elementow sprawdzac czy znajduje sie w pairs i wyrzucic - gotowe
+# Powtarzac az do braku zmiany ilosci znakow w liscie - gotowe
+# Sprawdzic czy jak znajdziemy znak w left_wing, to czy jego sasiad z prawej jest w right_wing - gotowe
+# potrzeba bedzie jakos je ponumerowac - gotowe
+# zapewnienie, ze to nie bedzie para zapewnia nam wyrzucenie par w pierwszym kroku - gotowe
+
+tst = [
+       '[({(<(())[]>[[{[]{<()<>>',
+       '[(()[<>])]({[<{<<[]>>(',
+       '{([(<{}[<>[]}>{[]{[(<()>',
+       '(((({<>}<{<{<>}{[]{[]{}',
+       '[[<[([]))<([[{}[[()]]]',
+       '[{[{({}]{}}([{[{{{}}([]',
+       '{<[[]]>}<{[{[{[]{()[[[]',
+       '[<(<(<(<{}))><([]([]()',
+       '<{([([[(<>()){}]>(<<{{',
+       '<{([{{}}[<[[[<>{}]]]>[]]',
+       ]
+
+def corrupted(syntax: list):
+    pairs = ['()','[]','{}','<>']
+    right_wing =  [')',']','}','>']
+    dict_ = {')': 3,
+             ']': 57,
+             '}': 1197,
+             '>': 25137}
+    crptd = []
+    score = 0
+    
+    for k in range(len(syntax)):
+        temp = list(syntax[k])
+        j = []
+        for iter in np.arange(len(temp)/2)+1:
+            if len(j) > 0:
+                for _ in sorted(j, reverse = True):
+                    temp.pop(_)
+                j = []
+            else:
+                for i in range(len(temp)-1):
+                    if temp[i]+temp[i+1] in pairs:
+                        j.append(i)
+                        j.append(i+1)
+            
+        for t in temp:
+            if t in right_wing:
+                crptd.append(t)
+                break
+                
+    for n in crptd:
+        score += dict_[n]
+    return score
+
+corrupted(tst) # 26397 - good
+
+print("The total syntax error score for those errors is:", corrupted(syntax_))
+
+
+
+
+
+
 
