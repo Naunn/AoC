@@ -1282,13 +1282,45 @@ def flashes(input_map: list, iter_: int):
         result += np.count_nonzero(input_map_ == 11)
         input_map_[input_map_ == 11] = 0
         
-    print("After", k+1,"step:\n", input_map_)
-    return result
+    print("After", iter_,"step:\n")
+    return input_map_, result
 
 flashes(tst, 10) #204
 flashes(tst, 100) #1656
 
-print('After 100 steps there is a total number of flashes:', flashes(input_, 100))
+print('After 100 steps there is a total number of flashes:', flashes(input_, 100)[1])
+
+def bright(input_map: list, i: int):
+    if (np.allclose([[0]*len(input_map)]*len(input_map), flashes(input_map, i)[0]) == False):
+        return bright(input_map, i+1)
+    else:
+        return i
+
+# bright(tst, 1) # after 195
+
+# bright(input_, 1) # 324
+
+print('The first step during which all octopuses flash is:', bright(input_, 324))
+
+# %% zadanie 12
+day_twelve = get_data(session=S, day=12, year=2021).split('\n')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
