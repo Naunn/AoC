@@ -1,6 +1,7 @@
 from aocd import get_data
 import yaml
 import copy
+import random
 
 
 with open("config.yaml", "r") as f:
