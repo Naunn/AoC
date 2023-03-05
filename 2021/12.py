@@ -1,7 +1,5 @@
 from aocd import get_data
 import yaml
-import copy
-import random
 
 
 with open("config.yaml", "r") as f:
@@ -80,109 +78,37 @@ def make_graph(verts: list):
     return graph
 
 
-# def rand_path(graph):
-#     g = copy.deepcopy(graph)
-#     temp = ['start']
+def DFS(graph: dict, vertex: str, destination: str, visited: list, path: list) -> int:
+    if vertex.islower():
+        visited[vertex] = True
+    path.append(vertex)
 
-#     while (v != 'end'):
-#         for v in g['start']:
-#             temp.append(v)
-
-
-#     return temp
-
-# rand_path(tst)
-
-
-def drop_it(graph, v):
-    g = copy.deepcopy(graph)
-    for el in g:
-        try:
-            g[el].remove(v)
-        except:
-            pass
-    return g
-
-
-tst = make_graph(tst1)
-tst
-
-
-def rand_path(graph, v):
-    # print('v:',v)
-    g = copy.deepcopy(graph)
-    l = g[v]
-
-    # print('temp before:',temp)
-    # print('l before:',l)
-
-    for _ in l:
-        if _.islower() and _ in temp:
-            # print('_.lower in temp:',_)
-            l.remove(_)
-    # if v.islower() and v in temp:
-    #     print('v.lower in temp:',v)
-    #     g = drop_it(g, v)
-    # try:
-    #     l.remove(v)
-    # except:
-    #     pass
-
-    if "start" in l:
-        l.remove("start")
-    # print('l after:',l)
-    randv = random.choice(l)
-    # print('randv:',randv)
-    if v == "start":
-        if "start" not in temp:
-            temp.append(v)
-        g.pop(v)
+    count = 0
+    if vertex == destination:
+        count = 1
     else:
-        temp.append(v)
+        for v in graph[vertex]:
+            if visited[v] == False:
+                count += DFS(graph, v, destination, visited, path)
 
-    if v == "end":
-        return temp
+    path.pop()
+    visited[vertex] = False
 
-    # print('temp after:',temp)
-
-    # print('--------------------------')
-    rand_path(g, randv)
-
-
-ans = []
-temp = []
-rand_path(tst, "start")
-temp
-ans.append(temp)
-ans
+    return count
 
 
-def iter_(graph: dict, i: int):
-    ans = []
-    for _ in range(i):
-        try:
-            temp = []
-            temp = rand_path(graph, "start")
-            ans.append(temp)
-            print("temp:", temp)
-        except:
-            pass
-
-    print("ans final", ans)
-    final = []
-    for el in ans:
-        if el not in final:
-            final.append(el)
-
-    return final
+def all_paths(graph: dict, start: str, finish: str) -> int:
+    visited = dict.fromkeys(graph.keys(), False)
+    path = []
+    return DFS(graph, start, finish, visited, path)
 
 
-iter_(tst, 100)
+all_paths(make_graph(tst1), "start", "end")  # 10
+all_paths(make_graph(tst2), "start", "end")  # 19
+all_paths(make_graph(tst3), "start", "end")  # 226
 
-j = []
-temp = []
-rand_path(tst, "start")
-j.append(temp)
-j
-
-drop_it(tst, "b")
+print(
+    "There is {} paths through this cave system where we visit small caves at most once.".format(
+        all_paths(make_graph(day_twelve), "start", "end")
+    )
+)
