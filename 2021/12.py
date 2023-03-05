@@ -79,82 +79,14 @@ def make_graph(verts: list):
     return graph
 
 
-def DFS(graph: dict, vertex: str, destination: str, visited: list, path: list) -> int:
-    if vertex.islower():
-        visited[vertex] = True
-    path.append(vertex)
-
-    count = 0
-    if vertex == destination:
-        count = 1
-    else:
-        for v in graph[vertex]:
-            if visited[v] == False:
-                count += DFS(graph, v, destination, visited, path)
-
-    path.pop()
-    visited[vertex] = False
-
-    return count
-
-
-def all_paths(graph: dict, start: str, finish: str) -> int:
-    visited = dict.fromkeys(graph.keys(), False)
-    path = []
-    return DFS(graph, start, finish, visited, path)
-
-
-all_paths(make_graph(tst1), "start", "end")  # 10
-all_paths(make_graph(tst2), "start", "end")  # 19
-all_paths(make_graph(tst3), "start", "end")  # 226
-
-print(
-    "There is {} paths through this cave system where we visit small caves at most once.".format(
-        all_paths(make_graph(day_twelve), "start", "end")
-    )
-)
-
-
-# def remove_bigger(x: list):
-#     temp = x[1:-1]
-#     for _ in temp:
-#         if _.isupper():
-#             temp.remove(_)
-#     return temp
-
-
-# def DFS_2(graph: dict, vertex: str, destination: str, visited: list, path: list) -> int:
-#     if vertex.islower():
-#         visited[vertex] += 1
-#     path.append(vertex)
-
-#     count = 0
-
-#     #temp = remove_bigger(path)
-#     if vertex == destination and (
-#         len(temp) - 1 == len(set(temp)) or len(temp) == len(set(temp))
-#     ):
-#         count = 1
-#     else:
-#         for v in graph[vertex]:
-#             if visited[v] < 2:  # and 2 not in list(visited.values())[1:]:
-#                 count += DFS_2(graph, v, destination, visited, path)
-
-#     path.pop()
-#     visited[vertex] -= 1
-
-#     return count
-
-
-# def all_paths_2(graph: dict, start: str, finish: str) -> int:
-#     visited = dict.fromkeys(graph.keys(), 0)
-#     visited[start] = 2
-#     visited[finish] = 1
-#     path = []
-#     return DFS_2(graph, start, finish, visited, path)
-
-
-def DFS_2(graph: dict, vertex: str, destination: str, visited: list, path: list) -> int:
+def DFS(
+    graph: dict,
+    vertex: str,
+    destination: str,
+    visited: list,
+    path: list,
+    VisitTwice: bool,
+) -> int:
     if vertex.islower():
         visited[vertex] += 1
     path.append(vertex)
@@ -173,29 +105,39 @@ def DFS_2(graph: dict, vertex: str, destination: str, visited: list, path: list)
         )
         for v in graph[vertex]:
             if (visited[v] == 0) or (
-                visited[v] < 2 and (small_caves == 0 or v.isupper())
+                visited[v] < 2 and (small_caves == 0 or v.isupper()) and VisitTwice
             ):
-                count += DFS_2(graph, v, destination, visited, path)
+                count += DFS(graph, v, destination, visited, path, VisitTwice)
 
     path.pop()
-    visited[vertex] -= 1
+    visited[vertex] = 0 if not VisitTwice else visited[vertex] - 1
 
     return count
 
 
-def all_paths_2(graph: dict, start: str, finish: str) -> int:
+def all_paths(graph: dict, start: str, finish: str, VisitTwice: bool) -> int:
     visited = dict.fromkeys(graph.keys(), 0)
     path = []
     visited[start] = 2
-    return DFS_2(graph, start, finish, visited, path)
+    return DFS(graph, start, finish, visited, path, VisitTwice)
 
 
-all_paths_2(make_graph(tst1), "start", "end")  # 36
-all_paths_2(make_graph(tst2), "start", "end")  # 103
-all_paths_2(make_graph(tst3), "start", "end")  # 3509
+all_paths(make_graph(tst1), "start", "end", False)  # 10
+all_paths(make_graph(tst2), "start", "end", False)  # 19
+all_paths(make_graph(tst3), "start", "end", False)  # 226
+
+print(
+    "There is {} paths through this cave system where we visit small caves at most once.".format(
+        all_paths(make_graph(day_twelve), "start", "end", False)
+    )
+)
+
+all_paths(make_graph(tst1), "start", "end", True)  # 36
+all_paths(make_graph(tst2), "start", "end", True)  # 103
+all_paths(make_graph(tst3), "start", "end", True)  # 3509
 
 print(
     "There is {} paths through this cave system where we visit single small caves at most twice and other small caves at most once.".format(
-        all_paths_2(make_graph(day_twelve), "start", "end")
+        all_paths(make_graph(day_twelve), "start", "end", True)
     )
 )
