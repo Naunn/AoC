@@ -2,6 +2,7 @@ from aocd import get_data
 import yaml
 import copy
 import numpy as np
+import collections
 
 
 with open("config.yaml", "r") as f:
@@ -9,7 +10,6 @@ with open("config.yaml", "r") as f:
 
 S = config["SESSION_COOKIES"]["HOME"]
 puzzle_input = get_data(session=S, day=14, year=2021).split("\n")
-puzzle_input[2:]
 
 tst = "NNCB"
 tst_rules = [
@@ -82,13 +82,52 @@ def value_test(input_s: str, input_d: dict, input_i: int, expected: int) -> None
 
 
 value_test(tst, tst_rules, 10, 1588)
-value_test(tst, tst_rules, 40, 2188189693529)
+# value_test(tst, tst_rules, 40, 2188189693529) # fails due to lack of memory
 
 print(
     "The quantity of the most common element minus the quantity of the smallest element after 10 steps is {}.".format(
         polymer_value(puzzle_input[0], puzzle_input[2:], 10)
     )
 )
+
+
+def polymer_value(input_: str, rules_: str, i_: int):
+    rules = rules_dict(rules_)
+
+    # Initial counts of pairs
+    init_counts = collections.Counter()
+    for i in range(len(input_) - 1):
+        init_counts[input_[i : i + 2]] += 1
+        init_counts
+
+    # Iterating and inputing another pairs
+    for _ in range(i_):
+        new_counts = collections.Counter()
+        for k, v in init_counts.items():
+            new_counts[
+                f"{k[0]}{rules[k]}"
+            ] += v  # take first letter in pair and concat with value from rules as new pair and add value
+            new_counts[
+                f"{rules[k]}{k[1]}"
+            ] += v  # take value from rules and concat with second letter in pair as new pair and add value
+        init_counts = new_counts
+
+    # Counting each occurring letter and dividing by 2 (where the first and last leter from input_ get an extra +1)
+    counts = collections.Counter()
+    for k, v in init_counts.items():
+        counts[f"{k[0]}"] += v
+        counts[f"{k[1]}"] += v
+
+    counts[input_[0]] += 1
+    counts[input_[-1]] += 1
+
+    val = np.array(list(counts.values())) // 2
+
+    return max(val) - min(val)
+
+
+value_test(tst, tst_rules, 10, 1588)
+value_test(tst, tst_rules, 40, 2188189693529)
 
 print(
     "The quantity of the most common element minus the quantity of the smallest element after 40 steps is {}.".format(
