@@ -147,18 +147,23 @@ tst_map_x5 = [
 value_test(tst_map_x5, tst_value_x5)
 
 
-org_map = array_map(tst_map)
-new_map = org_map.copy()
-for rep in range(4):
-    print(rep)
-    temp, temp[temp > 9] = org_map + rep + 1, rep - 1
-    new_map = np.concatenate((new_map, temp), axis=1)
-new_map[9]
-array_map(tst_map_x5)[9]
+def spread_map(input_map: str, i: int = 5) -> np.array:
+    # create temp maps
+    new_map = array_map(input_map)
+    temp = array_map(input_map)
 
+    # spread wide
+    for rep in range(i - 1):
+        temp, temp[temp > 9] = temp + 1, 1
+        new_map = np.concatenate((new_map, temp), axis=1)
 
-def spread_map(input_map: str) -> np.array:
-    return array_map(tst_map_x5)
+    # spread long
+    temp = new_map.copy()
+    for rep in range(i - 1):
+        temp, temp[temp > 9] = temp + 1, 1
+        new_map = np.concatenate((new_map, temp), axis=0)
+
+    return new_map
 
 
 def map_test(input_map: str, expected_map: str) -> None:
